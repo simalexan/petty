@@ -6,7 +6,8 @@ for testing our skills in the development of highly scalable web services
 
 Current feature status
 ----------------------
-- using MongoDB
+- using MongoDB with Mongoose
+- Pet starting schema added
 
 Next features
 -------------
@@ -15,5 +16,3 @@ Next features
 
 
 *will fill the description later
-
-Viktor was here
