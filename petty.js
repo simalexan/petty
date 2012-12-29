@@ -6,10 +6,12 @@ var log = console.log;
 mongoose.connect('mongodb://localhost/test');
 
 http.createServer(function (req, res){
+
     if(req.url == '/'){
-        console.log("Server home page on port 8000");
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        log("Server home page on port 8000");
         var pet = new Pet({name: 'fluffy', health: 100, ownerId: 1});
-        pet.gainHealth(15);
+        pet.loseHealth(15);
         res.end();
 
     }

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose')
+    , log = console.log
     , Schema = mongoose.Schema;
 
 var petSchema = new Schema({
@@ -8,26 +9,36 @@ var petSchema = new Schema({
 });
 
 petSchema.methods.gainHealth = function (healthIncrease) {
-    console.log("Current health: " + this.health);
-    console.log("Health increase: " + healthIncrease);
-    this.health += healthIncrease;
-    console.log("Current health: " + this.health);
-}
+    log("Current health: " + this.health);
+    log("Health increase: " + healthIncrease);
+    if(this.health + healthIncrease > 100){
+        this.health = 100;
+        log("Pet is already on maximum health");
+    }else{
+        this.health += healthIncrease;
+    }
+    log("Current health: " + this.health);
+};
 
 petSchema.methods.loseHealth = function (healthDecrease) {
-    console.log("Current health: " + this.health);
-    console.log("Health decrease: " + healthDecrease);
-    this.health -= healthDecrease;
-    console.log("Current health: " + this.health);
-}
+    log("Current health: " + this.health);
+    log("Health decrease: " + healthDecrease);
+    if(this.health - healthDecrease <= 0){
+        this.die();
+        log("Your pet has died");
+    }else{
+        this.health -= healthDecrease;
+    }
+    log("Current health: " + this.health);
+};
 
 petSchema.methods.die = function () {
-    console.log("Current health: " + this.health);
+    log("Current health: " + this.health);
     this.health = 0;
-    console.log("Current health: " + this.health);
+    log("Current health: " + this.health);
     if(this.health == 0){
-        console.log("Ha-ha! Your pet has died. ~ Sometimes I wonder if I am a good person at all.");
+        log("Ha-ha! Your pet has died. ~ Sometimes I wonder if I am a good person at all.");
     }
-}
+};
 
 module.exports = mongoose.model('Pet', petSchema);
