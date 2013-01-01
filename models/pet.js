@@ -1,6 +1,6 @@
-var mongoose = require('mongoose')
-    , log = console.log
-    , Schema = mongoose.Schema;
+var mongoose = require('mongoose'),
+    log = console.log,
+    Schema = mongoose.Schema;
 
 var petSchema = new Schema({
     name: String,
