@@ -15,11 +15,11 @@ http.createServer(function (req, res){
         log("Server home page on port 8000");
         var pet = new Pet({name: 'fluffy', health: 100, ownerId: 1});
         pet.loseHealth(15);
-        var user = new User({username: 'test', email: 'viktortuba@gmail.com', password: '1234', token: '1'});
+        var user = new User({username: 'test', email: 'alexander.simovic@live.com', password: '1234', token: '1'});
         log('Created a user by this username: ' + user.username);
 
         // calling the save function
-        Users.createUser(req, res, user, function(err, result){
+        Users.addUser(user, function(err, result){
             if(err){
                 console.log(err);
             } else {
@@ -27,8 +27,9 @@ http.createServer(function (req, res){
                 console.log(result);
 
                 // test if there is a user by this name
-                var testUser = Users.show(req,res,'test');
-                testUser.username = "viktor";
+                Users.listAll(function (err, users) {
+                    console.log(JSON.stringify(users));
+                });
             }
         });
         res.end();

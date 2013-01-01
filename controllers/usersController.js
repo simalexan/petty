@@ -2,7 +2,8 @@ var User = require('../models/user.js');
 
 
 // create a user by calling the model method createUser
-exports.createUser = function (req, res, user, callback) {
+exports.addUser = function (user, callback) {
+
     User.find({email: user.email}, function(err, users) {
 
         if(err) throw err;
@@ -18,22 +19,19 @@ exports.createUser = function (req, res, user, callback) {
 };
 
 // function for listing all of the users
-exports.listAll = function () {
+exports.listAll = function (callback) {
+
     User.find(function(err, users) {
-        if(err) throw err;
-        else JSON.stringify(users);
+        if(err) callback(err, null);
+        else callback(null, users);
     });
 };
 
 // function for getting one specific user by his username
-exports.show = function (req, res, username) {
-    User.findOne({username: username}, function(err, user) {
-        if(err){
-            throw err;
-        } else{
-            console.log(JSON.stringify(user));
-            return(user);
-        }
+exports.show = function (username, callback) {
 
+    User.findOne({username: username}, function(err, user) {
+        if(err) callback(err, null);
+        else callback(null, user);
     })
 };
