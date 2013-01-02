@@ -5,7 +5,7 @@ var mongoose = require('mongoose'),
 var petSchema = new Schema({
     name: String,
     health: Number,
-    ownerId: Number
+    userId: Number
 });
 
 petSchema.methods.gainHealth = function (healthIncrease) {
@@ -38,6 +38,12 @@ petSchema.methods.die = function () {
     log("Current health: " + this.health);
     if(this.health == 0){
         log("Ha-ha! Your pet has died. ~ Sometimes I wonder if I am a good person at all.");
+    }
+};
+
+petSchema.methods.updatePet = function () {
+    if (this._id != null && this.health != null && this.userId != null) {
+        this.save();
     }
 };
 

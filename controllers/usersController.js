@@ -6,15 +6,16 @@ exports.addUser = function (user, callback) {
 
     User.find({email: user.email}, function(err, users) {
 
-        if(err) throw err;
+        if(err) callback(err, null);
 
         if(users.length > 0){
             callback("A user with that email already exists", null);
         }else{
-            user.createUser();
-            callback(null, user);
+            user.createUser(function (err) {
+                if (err) callback(err, null);
+                else callback(null, user);
+            });
         }
-
     });
 };
 
