@@ -17,7 +17,7 @@ userSchema.methods.createUser = function (callback) {
             else callback(null, this);
         });
     }else{
-        console.log("Some of the required attributes are null. Please check.");
+        callback("Some of the required attributes are null. Please check.", null);
     }
 };
 

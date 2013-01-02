@@ -44,6 +44,8 @@ petSchema.methods.die = function () {
 petSchema.methods.updatePet = function () {
     if (this._id != null && this.health != null && this.userId != null) {
         this.save();
+    } else {
+        console.log("Some of the required attributes are null. Please check.");
     }
 };
 

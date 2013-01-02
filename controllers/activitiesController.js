@@ -6,4 +6,3 @@ exports.addActivity = function (activity, callback) {
         else callback(null, activity);
     });
 };
-
