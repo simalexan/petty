@@ -1,5 +1,6 @@
 var http = require('http'),
     mongoose = require('mongoose'),
+    connect = require('connect'),
     Pet = require('./models/pet.js'),
     User = require('./models/user.js'),
     Activity = require('./models/activity.js'),
