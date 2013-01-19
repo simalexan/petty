@@ -12,65 +12,75 @@ var http = require('http'),
 // connect to the MongoDB database
 mongoose.connect('mongodb://localhost/test');
 
-http.createServer(function (req, res){
+var app = connect()
+    .use(connect.logger('dev'))
+    .use(connect.static(__dirname + '/public'))
+    .use(connect.bodyParser())
+    .use(function(req, res){
 
-    if (req.method == "POST") {
-        if(req.url == '/'){
+    //if (req.method == "POST") {
 
-            res.writeHead(200, {'Content-Type': 'application/json'});
-            res.write('<h2>Petty project Home page</h2>');
-            log("Server home page on port 8000");
-            var pet = new Pet({name: 'fluffy', health: 100, userId: 1});
-            pet.loseHealth(15);
-            res.write(JSON.stringify(pet));
-            res.end();
+        log("Server home page on port 8000");
 
-        } else if (req.url == '/signup') {
+        switch (req.url) {
 
-            // prepare the parameters from the header and fill a User object
-            var user = new User({username: 'someUsername', email: 'email@gmail.com', password: '1234', token: '1'});
-            log('Variable user with following username: ' + user.username + ' loaded!');
 
-            // preparing the HTTP response
 
-            // calling the save function
-            Users.addUser(user, function(err, result){
-                if(err){
-                    res.writeHead(200, {'Content-Type': 'application/json'});
-                    res.write(err);
-                    res.end();
-                } else {
-                    console.log("user save passed.");
-                    console.log(result);
+            case "/":
 
-                    // test if there is a user by this name
-                    Users.listAll(function (err, users) {
+                res.writeHead(200, {'Content-Type': 'application/json'});
+                var pet = new Pet({name: 'fluffy', health: 100, userId: 1});
+                pet.loseHealth(15);
+                res.end(JSON.stringify(pet));
+
+                break;
+
+            case "/sign_up":
+
+                // prepare the parameters from the header and fill a User object
+                var user = new User({username: 'someUsername', email: 'email@gmail.com', password: '1234', token: '1'});
+                log('Variable user with following username: ' + user.username + ' loaded!');
+
+                // preparing the HTTP response
+
+                // calling the save function
+                Users.addUser(user, function(err, result){
+                    if(err){
                         res.writeHead(200, {'Content-Type': 'application/json'});
-                        res.write(JSON.stringify(users));
-                        res.end();
-                    });
-                }
-            });
-        } else if (req.url == '/login') {
+                        res.end(err);
+                    } else {
+                        console.log("user save passed.");
+                        console.log(result);
 
-        } else if (req.url == '/logout') {
+                        // test if there is a user by this name
+                        Users.listAll(function (err, users) {
+                            res.writeHead(200, {'Content-Type': 'application/json'});
+                            res.end(JSON.stringify(users));
+                        });
+                    }
+                });
+                break;
 
-        } else if (req.url == '/users/delete') {
+            case "/login":
 
-        } else if (req.url == '/pets/add') {
+            case "/logout":
 
-        } else if (req.url == '/activities/add') {
+            case "/user/delete":
 
-        } else {
-            res.writeHead(404, {'Content-Type': 'application/json'});
-            res.write("{ status: 'NOTHING'}");
-            res.end();
+            case "/pet/add":
+
+            case "/activity/add":
+
+            default:
+                res.writeHead(404, {'Content-Type': 'application/json'});
+                res.end({status: "NOTHING"});
         }
-    } else {
+    /*} else {
         res.writeHead(404, {'Content-Type': 'text/html'});
         res.write("<h1>No such page or directory</h1>");
         res.end();
-    }
+    }*/
 
 
-}).listen(8000, 'localhost');
+    });
+http.createServer(app).listen(8000);
