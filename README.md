@@ -8,6 +8,7 @@ A very small game API using Node.js for testing our skills in the development of
 Current feature status
 ----------------------
 - using MongoDB with Mongoose
+- using Connect with logger, bodyParser & static features
 
 ###Models
 
@@ -15,7 +16,7 @@ Current feature status
     - gainHealth
     - loseHealth
     - die
-    - updatePet
+    - savePet
 
 - User starting schema added with two basic methods:
     - createUser
@@ -33,22 +34,23 @@ Current feature status
 
 ###Controllers
 
-- Pet Controller added with an outline of two methods:
+- Pets Controller added with one fully implemented method and outline of three methods:
     - addPet
+    - updatePet
     - deletePet
+    - findPetById
 
-- Activity Controller added with a method:
+- Activities Controller added with a method:
     - addActivity
 
-- User Controller added with methods:
+- Users Controller added with methods:
     - addUser
     - listAll
     - show
 
 Next features
 -------------
-- will be using Connect ~ for routing and related middleware (in the next push, seems so)
-- will be hosted on Heroku (as soon as it reaches version 0.1, which will be soon)
+- will be hosted on AppFog (as soon as it reaches version 0.1, which will be soon)
 
 
 *will fill the features description as they are being added
