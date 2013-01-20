@@ -1,4 +1,5 @@
 var http = require('http'),
+    fs = require('fs'),
     mongoose = require('mongoose'),
     connect = require('connect'),
     Pet = require('./models/pet.js'),
@@ -7,7 +8,15 @@ var http = require('http'),
     Pets = require('./controllers/petsController.js'),
     Users = require('./controllers/usersController.js'),
     Activities = require('./controllers/activitiesController.js'),
-    log = console.log;
+    log = console.log,
+    index;
+
+fs.readFile('./public/index.html', function (err, data) {
+    if (err) {
+        throw err;
+    }
+    index = data;
+});
 
 // connect to the MongoDB database
 mongoose.connect('mongodb://localhost/test');
@@ -18,7 +27,7 @@ var app = connect()
     .use(connect.bodyParser())
     .use(function(req, res){
 
-    //if (req.method == "POST") {
+    if (req.method == "POST") {
 
         log("Server home page on port 8000");
 
@@ -80,7 +89,8 @@ var app = connect()
                     // checking if the required attributes have data
                     if(name != null && name != undefined && userId != null && userId != undefined){
                         Pets.addPet(res, name, userId, function (result){
-
+                            res.writeHead(200, {'Content-Type': 'application/json'});
+                            res.end(JSON.stringify(result));
                         });
                     } else {
                         res.writeHead(404, {'Content-Type': 'application/json'});
@@ -101,11 +111,11 @@ var app = connect()
                 accessDeniedHandler(res);
                 break;
         }
-    /*} else {
-        res.writeHead(404, {'Content-Type': 'text/html'});
-        res.write("<h1>No such page or directory</h1>");
-        res.end();
-    }*/
+    }else if (req.method == 'GET') {
+            res.writeHead(200, {"Content-Type":"text/html"});
+            res.write(index);
+            res.end();
+        }
 
 
     });
@@ -114,6 +124,6 @@ http.createServer(app).listen(8000);
 
 // HANDLER FUNCTIONS
 function accessDeniedHandler(res){
-    res.writeHead(404, {'Content-Type': 'application/json'});
+    res.writeHead(404, {"Content-Type": "application/json"});
     res.end({status: "FORBIDDEN"});
 }
