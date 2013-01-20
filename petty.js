@@ -24,15 +24,9 @@ var app = connect()
 
         switch (req.url) {
 
-
-
             case "/":
-
-                res.writeHead(200, {'Content-Type': 'application/json'});
-                var pet = new Pet({name: 'fluffy', health: 100, userId: 1});
-                pet.loseHealth(15);
-                res.end(JSON.stringify(pet));
-
+                //temporary
+                accessDeniedHandler(res);
                 break;
 
             case "/sign_up":
@@ -62,18 +56,50 @@ var app = connect()
                 break;
 
             case "/login":
+                //temporary
+                accessDeniedHandler(res);
+                break;
 
             case "/logout":
+                //temporary
+                accessDeniedHandler(res);
+                break;
 
-            case "/user/delete":
+            case "/user/update":
+                //temporary
+                accessDeniedHandler(res);
+                break;
 
             case "/pet/add":
 
+                if(req.body.pet){
+                    // getting new pet attributes
+                    var name = req.body.pet.name;
+                    var userId = req.body.pet.user_id;
+
+                    // checking if the required attributes have data
+                    if(name != null && name != undefined && userId != null && userId != undefined){
+                        Pets.addPet(res, name, userId, function (result){
+
+                        });
+                    } else {
+                        res.writeHead(404, {'Content-Type': 'application/json'});
+                        res.end({ status: "ERROR", operationMessage: "DATA_NULL" });
+
+                    }
+                } else{
+                    accessDeniedHandler(res);
+                }
+                break;
+
             case "/activity/add":
+                //temporary
+                accessDeniedHandler(res);
+                break;
 
             default:
-                res.writeHead(404, {'Content-Type': 'application/json'});
-                res.end({status: "NOTHING"});
+                accessDeniedHandler(res);
+                break;
         }
     /*} else {
         res.writeHead(404, {'Content-Type': 'text/html'});
@@ -84,3 +110,10 @@ var app = connect()
 
     });
 http.createServer(app).listen(8000);
+
+
+// HANDLER FUNCTIONS
+function accessDeniedHandler(res){
+    res.writeHead(404, {'Content-Type': 'application/json'});
+    res.end({status: "FORBIDDEN"});
+}

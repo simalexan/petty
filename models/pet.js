@@ -5,48 +5,78 @@ var mongoose = require('mongoose'),
 var petSchema = new Schema({
     name: String,
     health: Number,
-    userId: Number
+    userId: Number,
+    isAlive: Boolean
 });
 
-petSchema.methods.gainHealth = function (healthIncrease) {
-    log("Current health: " + this.health);
-    log("Health increase: " + healthIncrease);
+// PET GAIN HEALTH
+petSchema.methods.gainHealth = function (healthIncrease, callback) {
+
     if(this.health + healthIncrease > 100){
+
         this.health = 100;
-        log("Pet is already on maximum health");
+        this.savePet(function (result) {
+
+            if(result.status == "SUCCESS") {
+                result.operationMessage = "HEALTH_FULL";
+            }
+            callback(result);
+        });
     }else{
         this.health += healthIncrease;
+        this.savePet(function (result) {
+            if(result.status == "SUCCESS") {
+                result.operationMessage = "HEALTH_INCREASE";
+            }
+            callback(result);
+        });
     }
-    log("Current health: " + this.health);
+
 };
 
-petSchema.methods.loseHealth = function (healthDecrease) {
-    log("Current health: " + this.health);
-    log("Health decrease: " + healthDecrease);
+// PET LOSE HEALTH
+petSchema.methods.loseHealth = function (healthDecrease, callback) {
+
     if(this.health - healthDecrease <= 0){
-        this.die();
-        log("Your pet has died");
+        this.die(function (result) {
+            if(result.status == "SUCCESS") {
+                result.operationMessage = "HEALTH_DEAD";
+            }
+            callback(result);
+        });
     }else{
         this.health -= healthDecrease;
+        this.savePet(function (result) {
+
+            if(result.status == "SUCCESS") {
+                result.operationMessage = "HEALTH_DECREASE";
+            }
+            callback(result);
+
+        });
     }
-    log("Current health: " + this.health);
 };
 
-petSchema.methods.die = function () {
-    log("Current health: " + this.health);
+// PET DIE
+petSchema.methods.die = function (callback) {
+
     this.health = 0;
-    log("Current health: " + this.health);
-    if(this.health == 0){
-        log("Ha-ha! Your pet has died. ~ Sometimes I wonder if I am a good person at all.");
-    }
+    this.isAlive = false;
+    this.savePet( function(result) {
+        callback(result);
+    });
 };
 
-petSchema.methods.updatePet = function () {
-    if (this._id != null && this.health != null && this.userId != null) {
+// PET SAVE
+petSchema.methods.savePet = function (callback) {
+
+    if (this.name != null && this.health != null && this.userId != null) {
         this.save();
+        callback({ status: "SUCCESS" });
     } else {
-        console.log("Some of the required attributes are null. Please check.");
+        callback({ status: "ERROR", operationMessage: "DATA_NULL" });
     }
+
 };
 
 module.exports = mongoose.model('Pet', petSchema);
