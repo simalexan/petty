@@ -6,7 +6,8 @@ var petSchema = new Schema({
     name: String,
     health: Number,
     userId: Number,
-    isAlive: Boolean
+    isAlive: Boolean,
+    stateId: Number
 });
 
 // PET GAIN HEALTH
@@ -62,7 +63,7 @@ petSchema.methods.die = function (callback) {
 
     this.health = 0;
     this.isAlive = false;
-    this.savePet( function(result) {
+    this.savePet(function (result) {
         callback(result);
     });
 };

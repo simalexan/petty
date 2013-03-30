@@ -6,8 +6,9 @@ var http = require('http'),
     User = require('./models/user.js'),
     Activity = require('./models/activity.js'),
     Pets = require('./controllers/petsController.js'),
+    Application = require('./controllers/applicationController.js'),
     Users = require('./controllers/usersController.js'),
-    Activities = require('./controllers/activitiesController.js'),
+    //Activities = require('./controllers/activitiesController.js'),
     log = console.log,
     index;
 
@@ -35,7 +36,7 @@ var app = connect()
 
             case "/":
                 //temporary
-                accessDeniedHandler(res);
+                Application.notFoundHandler(res);
                 break;
 
             case "/sign_up":
@@ -65,18 +66,17 @@ var app = connect()
                 break;
 
             case "/login":
-                //temporary
-                accessDeniedHandler(res);
+                Users.login(req, res);
                 break;
 
             case "/logout":
                 //temporary
-                accessDeniedHandler(res);
+                Application.notFoundHandler(res);
                 break;
 
             case "/user/update":
                 //temporary
-                accessDeniedHandler(res);
+                Application.notFoundHandler(res);
                 break;
 
             case "/pet/add":
@@ -93,22 +93,21 @@ var app = connect()
                             res.end(JSON.stringify(result));
                         });
                     } else {
-                        res.writeHead(404, {'Content-Type': 'application/json'});
-                        res.end({ status: "ERROR", operationMessage: "DATA_NULL" });
-
+                        Application.dataNullHandler(res);
                     }
                 } else{
-                    accessDeniedHandler(res);
+                    Application.accessDeniedHandler(res);
                 }
                 break;
 
             case "/activity/add":
                 //temporary
-                accessDeniedHandler(res);
+                Application.notFoundHandler(res);
                 break;
 
             default:
-                accessDeniedHandler(res);
+                //temporary
+                Application.accessDeniedHandler(res);
                 break;
         }
     }else if (req.method == 'GET') {
@@ -121,9 +120,3 @@ var app = connect()
     });
 http.createServer(app).listen(8000);
 
-
-// HANDLER FUNCTIONS
-function accessDeniedHandler(res){
-    res.writeHead(404, {"Content-Type": "application/json"});
-    res.end({status: "FORBIDDEN"});
-}
