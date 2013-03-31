@@ -40,29 +40,7 @@ var app = connect()
                 break;
 
             case "/sign_up":
-
-                // prepare the parameters from the header and fill a User object
-                var user = new User({username: 'someUsername', email: 'email@gmail.com', password: '1234', token: '1'});
-                log('Variable user with following username: ' + user.username + ' loaded!');
-
-                // preparing the HTTP response
-
-                // calling the save function
-                Users.addUser(user, function(err, result){
-                    if(err){
-                        res.writeHead(200, {'Content-Type': 'application/json'});
-                        res.end(err);
-                    } else {
-                        console.log("user save passed.");
-                        console.log(result);
-
-                        // test if there is a user by this name
-                        Users.listAll(function (err, users) {
-                            res.writeHead(200, {'Content-Type': 'application/json'});
-                            res.end(JSON.stringify(users));
-                        });
-                    }
-                });
+                Users.signup(req, res);
                 break;
 
             case "/login":
@@ -80,24 +58,7 @@ var app = connect()
                 break;
 
             case "/pet/add":
-
-                if(req.body.pet){
-                    // getting new pet attributes
-                    var name = req.body.pet.name;
-                    var userId = req.body.pet.user_id;
-
-                    // checking if the required attributes have data
-                    if(name != null && name != undefined && userId != null && userId != undefined){
-                        Pets.addPet(res, name, userId, function (result){
-                            res.writeHead(200, {'Content-Type': 'application/json'});
-                            res.end(JSON.stringify(result));
-                        });
-                    } else {
-                        Application.dataNullHandler(res);
-                    }
-                } else{
-                    Application.accessDeniedHandler(res);
-                }
+                Pets.addPet(req, res);
                 break;
 
             case "/activity/add":
