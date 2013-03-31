@@ -47,9 +47,9 @@ exports.login = function (req, res) {
     } else {
         App.accessDeniedHandler(res);
     }
-
 };
 
+// function for user sign up ~registration
 exports.signup = function (req, res){
 
     if(req.body.user){
@@ -77,7 +77,6 @@ exports.signup = function (req, res){
                         });
                     }
                 }
-
             });
         } else {
             App.dataNullHandler(res);

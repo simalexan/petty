@@ -2,6 +2,8 @@ var App = require('applicationController.js');
 var Helper = requre('helperController.js');
 var Pet = require('../models/pet.js');
 
+
+// function for creating a pet
 exports.addPet = function (req, res) {
 
     if(req.body.pet){
